@@ -1,0 +1,80 @@
+name: ci
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Integration tests
+        env:
+          ASIS_APP_KEY: ${{ secrets.ASIS_APP_KEY }}
+          ASIS_ACCOUNT_KEY: ${{ secrets.ASIS_ACCOUNT_KEY }}
+          ASIS_UPLOAD_URL: ${{ secrets.ASIS_UPLOAD_URL }}
+          ASIS_CORE_URL: ${{ secrets.ASIS_CORE_URL }}
+          ASIS_RESULT_URL: ${{ secrets.ASIS_RESULT_URL }}
+          ASSERT_SLO: "false"
+        run: npm run test:integration
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/
+
+  load-test:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run high-load test
+        env:
+          ASIS_APP_KEY: ${{ secrets.ASIS_APP_KEY }}
+          ASIS_ACCOUNT_KEY: ${{ secrets.ASIS_ACCOUNT_KEY }}
+          ASIS_UPLOAD_URL: ${{ secrets.ASIS_UPLOAD_URL }}
+          ASIS_CORE_URL: ${{ secrets.ASIS_CORE_URL }}
+          ASIS_RESULT_URL: ${{ secrets.ASIS_RESULT_URL }}
+          LOAD_VUS: "200"
+          LOAD_DURATION_SECONDS: "300"
+          LOAD_SEED_UPLOADS: "10"
+        run: npm run test:load
+
+      - name: Upload load reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: load-reports
+          path: reports/

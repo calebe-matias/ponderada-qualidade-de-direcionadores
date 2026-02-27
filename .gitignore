@@ -1,0 +1,9 @@
+node_modules/
+.env
+npm-debug.log*
+
+reports/*.html
+reports/*.json
+reports/*.md
+reports/assets/
+!reports/.gitkeep

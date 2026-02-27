@@ -20,7 +20,9 @@ function getEnv() {
     assertSlo: String(process.env.ASSERT_SLO || "false").toLowerCase() === "true",
     loadVus: parseInteger(process.env.LOAD_VUS, 200),
     loadDurationSeconds: parseInteger(process.env.LOAD_DURATION_SECONDS, 300),
-    loadSeedUploads: parseInteger(process.env.LOAD_SEED_UPLOADS, 10)
+    loadSeedUploads: parseInteger(process.env.LOAD_SEED_UPLOADS, 10),
+    loadProgressIntervalSeconds: parseInteger(process.env.LOAD_PROGRESS_INTERVAL_SECONDS, 15),
+    loadRequestTimeoutMs: parseInteger(process.env.LOAD_REQUEST_TIMEOUT_MS, 10000)
   };
 }
 

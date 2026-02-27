@@ -1,4 +1,4 @@
-# ASIS Tax Tech - Qualidade por Business Drivers (Node.js)
+# Ponderada de Qualidade dos Direcionadores de Negócio
 
 Projeto de aferição de qualidade da API ASIS com 3 drivers de negócio:
 
@@ -10,7 +10,7 @@ Projeto de aferição de qualidade da API ASIS com 3 drivers de negócio:
 
 1. Mapa do Business Drivers [3.0 pontos]: [docs/01-mapa-business-drivers.md](docs/01-mapa-business-drivers.md)
 2. Estrategia e massa de testes [4.0 pontos]: [docs/02-estrategia-massa-testes.md](docs/02-estrategia-massa-testes.md)
-3. Codificacao como documentacao de testes [3.0 pontos]: [docs/03-codificacao-como-documentacao.md](docs/03-codificacao-como-documentacao.md)
+3. Codificação como documentacao de testes [3.0 pontos]: [docs/03-codificacao-como-documentacao.md](docs/03-codificacao-como-documentacao.md)
 
 ## Stack e premissas
 
@@ -19,7 +19,7 @@ Projeto de aferição de qualidade da API ASIS com 3 drivers de negócio:
 - API alvo: ambiente STG da ASIS
 - Credenciais por `.env` (nao versionado)
 
-## Configuracao
+## Configuração
 
 1. Instalação das dependências:
 
@@ -52,7 +52,9 @@ npm run test:all
 npm run test:load
 ```
 
-## Relatorios
+Durante `test:load`, o script agora imprime progresso periodico (`req`, `erro`, `rps`, `inFlight`) para nao parecer travado.
+
+## Relatórios
 
 Arquivos gerados em `reports/`:
 
@@ -62,6 +64,11 @@ Arquivos gerados em `reports/`:
 - `driver2-polling-summary.json`
 - `load-metrics.json`
 - `load-summary.md`
+
+Variaveis uteis para depuracao de carga:
+
+- `LOAD_PROGRESS_INTERVAL_SECONDS` (default `15`)
+- `LOAD_REQUEST_TIMEOUT_MS` (default `10000`)
 
 ## Resultado da última execução local (2026-02-27)
 

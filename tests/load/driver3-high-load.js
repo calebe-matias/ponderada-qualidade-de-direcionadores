@@ -12,6 +12,28 @@ function percentile(values, p) {
   return sorted[Math.max(0, idx)];
 }
 
+function createReservoir(maxSamples = 100000) {
+  const values = [];
+  let seen = 0;
+
+  return {
+    add(value) {
+      seen += 1;
+      if (values.length < maxSamples) {
+        values.push(value);
+        return;
+      }
+      const index = Math.floor(Math.random() * seen);
+      if (index < maxSamples) {
+        values[index] = value;
+      }
+    },
+    values() {
+      return values;
+    }
+  };
+}
+
 function randomOf(list) {
   return list[Math.floor(Math.random() * list.length)];
 }
@@ -62,22 +84,51 @@ async function runHighLoad({
   client,
   processIds,
   vus,
-  durationSeconds
+  durationSeconds,
+  progressIntervalSeconds = 15
 }) {
-  const stopAt = Date.now() + (durationSeconds * 1000);
   const startedAt = Date.now();
-  const samples = [];
+  const stopAt = startedAt + (durationSeconds * 1000);
+  let totalRequests = 0;
+  let totalErrors = 0;
+  let inFlight = 0;
+  const globalLatencies = createReservoir(100000);
+  const minuteBuckets = {};
+
+  const progressTimer = setInterval(() => {
+    const elapsedSec = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
+    const errorRatePct = totalRequests > 0 ? ((totalErrors / totalRequests) * 100) : 0;
+    const rps = totalRequests / elapsedSec;
+    const stage = Date.now() < stopAt ? "executando" : "drenando";
+    console.log(`[BD3-T01] Progresso (${stage}) t=${elapsedSec}s req=${totalRequests} err=${errorRatePct.toFixed(2)}% rps=${rps.toFixed(2)} inFlight=${inFlight}`);
+  }, progressIntervalSeconds * 1000);
 
   async function worker() {
     while (Date.now() < stopAt) {
       const endpoint = Math.random() < 0.7 ? "process" : "result";
       const processId = randomOf(processIds);
+      inFlight += 1;
       const outcome = await performRequest(client, processId, endpoint);
-      samples.push({
-        ts: Date.now(),
-        endpoint,
-        ...outcome
-      });
+      inFlight -= 1;
+
+      const ts = Date.now();
+      const minute = Math.floor((ts - startedAt) / 60000);
+      if (!minuteBuckets[minute]) {
+        minuteBuckets[minute] = {
+          total: 0,
+          errors: 0,
+          latencies: createReservoir(20000)
+        };
+      }
+
+      totalRequests += 1;
+      if (!outcome.ok) {
+        totalErrors += 1;
+      }
+      globalLatencies.add(outcome.latencyMs);
+      minuteBuckets[minute].total += 1;
+      minuteBuckets[minute].errors += outcome.ok ? 0 : 1;
+      minuteBuckets[minute].latencies.add(outcome.latencyMs);
     }
   }
 
@@ -86,32 +137,15 @@ async function runHighLoad({
     workers.push(worker());
   }
   await Promise.all(workers);
+  clearInterval(progressTimer);
 
-  const totalRequests = samples.length;
-  const errors = samples.filter((s) => !s.ok).length;
-  const latencies = samples.map((s) => s.latencyMs);
-
-  const byMinute = {};
-  for (const sample of samples) {
-    const minute = Math.floor((sample.ts - startedAt) / 60000);
-    if (!byMinute[minute]) {
-      byMinute[minute] = {
-        total: 0,
-        errors: 0,
-        latencies: []
-      };
-    }
-    byMinute[minute].total += 1;
-    byMinute[minute].errors += sample.ok ? 0 : 1;
-    byMinute[minute].latencies.push(sample.latencyMs);
-  }
-
-  const minuteWindows = Object.entries(byMinute).map(([minute, data]) => ({
+  const totalElapsedSeconds = Math.max(1, Math.round((Date.now() - startedAt) / 1000));
+  const minuteWindows = Object.entries(minuteBuckets).map(([minute, data]) => ({
     minute: Number(minute),
     total: data.total,
     errorRatePct: Number(((data.errors / data.total) * 100).toFixed(2)),
-    p95Ms: percentile(data.latencies, 95)
-  }));
+    p95Ms: percentile(data.latencies.values(), 95)
+  })).sort((a, b) => a.minute - b.minute);
 
   const firstWindow = minuteWindows.length > 0 ? minuteWindows[0] : null;
   const abruptDegradation = firstWindow
@@ -121,15 +155,15 @@ async function runHighLoad({
   return {
     config: {
       vus,
-      durationSeconds
+      durationSeconds,
+      elapsedSeconds: totalElapsedSeconds
     },
     totals: {
       requests: totalRequests,
-      errors,
-      errorRatePct: totalRequests > 0 ? Number(((errors / totalRequests) * 100).toFixed(2)) : 0,
-      throughputRps: durationSeconds > 0 ? Number((totalRequests / durationSeconds).toFixed(2)) : 0,
-      p95Ms: percentile(latencies, 95),
-      avgMs: latencies.length > 0 ? Number((latencies.reduce((a, b) => a + b, 0) / latencies.length).toFixed(2)) : 0
+      errors: totalErrors,
+      errorRatePct: totalRequests > 0 ? Number(((totalErrors / totalRequests) * 100).toFixed(2)) : 0,
+      throughputRps: totalElapsedSeconds > 0 ? Number((totalRequests / totalElapsedSeconds).toFixed(2)) : 0,
+      p95Ms: percentile(globalLatencies.values(), 95)
     },
     minuteWindows,
     abruptDegradation
@@ -150,7 +184,8 @@ async function main() {
     accountKey: env.asisAccountKey,
     uploadUrl: env.asisUploadUrl,
     coreUrl: env.asisCoreUrl,
-    resultUrl: env.asisResultUrl
+    resultUrl: env.asisResultUrl,
+    timeoutMs: env.loadRequestTimeoutMs
   });
 
   console.log(`[BD3-T01] Semeando ${env.loadSeedUploads} IDs de processo...`);
@@ -162,7 +197,8 @@ async function main() {
     client,
     processIds,
     vus: env.loadVus,
-    durationSeconds: env.loadDurationSeconds
+    durationSeconds: env.loadDurationSeconds,
+    progressIntervalSeconds: env.loadProgressIntervalSeconds
   });
 
   const reportsDir = ensureReportsDir();
@@ -175,12 +211,13 @@ async function main() {
     "",
     `- Data: ${new Date().toISOString()}`,
     `- VUs: ${summary.config.vus}`,
-    `- Duracao (s): ${summary.config.durationSeconds}`,
+    `- Duracao planejada (s): ${summary.config.durationSeconds}`,
+    `- Duracao total observada (s): ${summary.config.elapsedSeconds}`,
     `- Requests totais: ${summary.totals.requests}`,
-    `- Erros: ${summary.totals.errors}`,
+    `- Erros totais: ${summary.totals.errors}`,
     `- Taxa de erro (%): ${summary.totals.errorRatePct}`,
     `- Throughput (req/s): ${summary.totals.throughputRps}`,
-    `- Latencia p95 (ms): ${summary.totals.p95Ms}`,
+    `- Latencia p95 aproximada (ms): ${summary.totals.p95Ms}`,
     `- Estabilidade sem degradacao abrupta: ${summary.abruptDegradation ? "nao" : "sim"}`
   ].join("\n");
   fs.writeFileSync(mdPath, `${md}\n`, "utf8");

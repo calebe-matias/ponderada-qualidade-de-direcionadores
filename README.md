@@ -1,8 +1,8 @@
 # ASIS Tax Tech - Qualidade por Business Drivers (Node.js)
 
-Projeto de afericao de qualidade da API ASIS com 3 drivers de negocio:
+Projeto de aferição de qualidade da API ASIS com 3 drivers de negócio:
 
-1. Confiabilidade do fluxo assincrono de upload
+1. Confiabilidade do fluxo assíncrono de upload
 2. Confiabilidade de consulta por polling de status
 3. Performance e estabilidade sob alta carga
 
@@ -21,13 +21,13 @@ Projeto de afericao de qualidade da API ASIS com 3 drivers de negocio:
 
 ## Configuracao
 
-1. Instale dependencias:
+1. Instalação das dependências:
 
 ```bash
 npm ci
 ```
 
-2. Crie `.env` a partir de `.env.example` e preencha:
+2. Criação do arquivo `.env` a partir de `.env.example` e preenchimento:
 
 - `ASIS_APP_KEY`
 - `ASIS_ACCOUNT_KEY`
@@ -36,16 +36,16 @@ npm ci
 
 - `tests/fixtures/sped-fiscal.txt`
 
-## Execucao
+## Execução
 
 ```bash
-# Unitario (servico de polling e retry)
+# Unitário (servico de polling e retry)
 npm run test:unit
 
-# Integracao real (upload + polling)
+# Integração real (upload + polling)
 npm run test:integration
 
-# Todos os testes unitarios + integracao
+# Todos os testes unitários + integração
 npm run test:all
 
 # Carga real agressiva: 200 VUs por 5 minutos (default)
@@ -63,15 +63,15 @@ Arquivos gerados em `reports/`:
 - `load-metrics.json`
 - `load-summary.md`
 
-## Resultado da ultima execucao local (2026-02-27)
+## Resultado da última execução local (2026-02-27)
 
-- Unitario: 3/3 passando
-- Integracao: 6/6 passando
+- Unitário: 3/3 passando
+- Integração: 6/6 passando
 - Driver 1 (burst): sucesso 100%, p95 upload 1057ms
 - Driver 2 (polling): timeout controlado observado com status 100
 - Driver 3 (200 VUs / 5 min): erro 95.39% (criterio de estabilidade falhou)
 
-## CI/CD minima
+## CI/CD mínima
 
 Workflow em `.github/workflows/ci.yml`:
 

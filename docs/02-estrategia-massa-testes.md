@@ -1,12 +1,6 @@
 # Estrategia e Massa de Testes [4.0 pontos]
 
-## Pergunta 2:
-
-Estratégia e Massa de Testes (Qual estrategia foi adotada e qual massa de testes foi usada?)
-
-## Resposta
-
-Foi adotada estrategia em tres camadas:
+Foi adotada estrategia em três camadas:
 
 1. Unitário: valida algoritmo de polling/retry sem dependencia externa.
 2. Integração: valida contrato real da API STG para upload e consulta de processo.

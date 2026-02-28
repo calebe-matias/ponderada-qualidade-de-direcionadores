@@ -1,11 +1,5 @@
 # Codificação como documentação de testes [3.0 pontos]
 
-## Pergunta 3:
-
-Codificação como documentação de testes (Como a codificação foi usada como documentação de testes?)
-
-## Resposta:
-
 Os testes foram escritos cada um com ID rastreável, objetivo, cenário e métrica; assim, o próprio código funciona como documentação.
 
 ## Mapa de testes por driver

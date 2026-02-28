@@ -1,14 +1,8 @@
 # Mapa do Business Drivers [3.0 pontos]
 
-## Pergunta 1:
-
-Mapa de Direcionadores (Qual o mapa dos direcionadores de negócio para aferição de qualidade da API?)
-
-## Resposta:
-
 Os três direcionadores abaixo foram mapeados com risco, métrica e critério de verificação:
 
-| Driver | Risco principal | Métricas aferidas | Critério de aceitacao |
+| Direcionador | Risco principal | Métricas aferidas | Critério de aceitacao |
 | --- | --- | --- | --- |
 | Confiabilidade do Fluxo Assincrono de Upload | Upload aceito sem rastreabilidade confiavel do processo | taxa de sucesso de upload, presenca de `processos[0].id`, latencia p95 | sucesso >= 99% (quando `ASSERT_SLO=true`) |
 | Confiabilidade de Consulta por Polling de Status | Polling infinito, timeout sem controle, falta de retry para erro transitorio | taxa de consultas sem erro, taxa de timeout, retries executados | polling encerra em `201`, `500`, `404` ou timeout controlado |

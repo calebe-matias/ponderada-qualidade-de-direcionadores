@@ -1,20 +1,20 @@
 # Estrategia e Massa de Testes [4.0 pontos]
 
-## Pergunta da atividade
+## Pergunta 2
 
-Qual estrategia foi adotada e qual massa de testes foi usada?
+Estratégia e Massa de Testes (Qual estrategia foi adotada e qual massa de testes foi usada?)
 
-## Resposta direta
+## Resposta
 
 Foi adotada estrategia em tres camadas:
 
-1. Unitario: valida algoritmo de polling/retry sem dependencia externa.
-2. Integracao: valida contrato real da API STG para upload e consulta de processo.
-3. Carga: valida performance e estabilidade em alta concorrencia com 200 VUs por 5 minutos.
+1. Unitário: valida algoritmo de polling/retry sem dependencia externa.
+2. Integração: valida contrato real da API STG para upload e consulta de processo.
+3. Carga: valida performance e estabilidade em alta concorrência com 200 VUs por 5 minutos.
 
-## Massa de testes
+### Massa de testes
 
-### Massa funcional
+#### Massa funcional
 
 - Arquivo real: `tests/fixtures/sped-fiscal.txt`
 - IDs de processo gerados dinamicamente por upload em cada execucao
@@ -32,14 +32,14 @@ Foi adotada estrategia em tres camadas:
   - `GET /api/v1/processo/{id}` (70%)
   - `GET /api/v1/resultado/processo/{id}` (30%)
 
-## Criterios de aprovacao (rigoroso balanceado)
+#### Criterios de aprovação
 
 - Upload: sucesso >= 99% (quando modo estrito ativo)
 - Polling: >= 95% sem erro de protocolo e encerramento controlado
 - Consulta de status p95: < 2s
 - Carga: erro HTTP < 5% em 200 VUs por 5 min
 
-## Risco conhecido de ambiente
+#### Risco conhecido de ambiente
 
 No ambiente STG, processos podem permanecer longos periodos em `status=100`.
 Tratamento no projeto:

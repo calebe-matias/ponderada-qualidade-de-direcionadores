@@ -2,7 +2,7 @@
 
 ## Pergunta 1:
 
-Qual o mapa dos direcionadores de negocio para afericao de qualidade da API?
+Mapa de Direcionadores (Qual o mapa dos direcionadores de negócio para aferição de qualidade da API?)
 
 ## Resposta:
 

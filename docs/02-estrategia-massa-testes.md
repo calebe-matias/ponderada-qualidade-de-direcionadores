@@ -1,8 +1,8 @@
-# Estrategia e Massa de Testes [4.0 pontos]
+# Estratégia e Massa de Testes [4.0 pontos]
 
-Foi adotada estrategia em três camadas:
+Foi adotada estratégia em três camadas:
 
-1. Unitário: valida algoritmo de polling/retry sem dependencia externa.
+1. Unitário: valida algoritmo de polling/retry sem dependência externa.
 2. Integração: valida contrato real da API STG para upload e consulta de processo.
 3. Carga: valida performance e estabilidade em alta concorrência com 200 VUs por 5 minutos.
 
@@ -11,12 +11,12 @@ Foi adotada estrategia em três camadas:
 #### Massa funcional
 
 - Arquivo real: `tests/fixtures/sped-fiscal.txt`
-- IDs de processo gerados dinamicamente por upload em cada execucao
+- IDs de processo gerados dinamicamente por upload em cada execução
 
-### Massa negativa
+#### Massa negativa
 
-- Ausencia de chave no header (`401` esperado)
-- Chave invalida (`401` esperado)
+- Ausência de chave no header (`401` esperado)
+- Chave inválida (`401` esperado)
 - `processId` inexistente (`404` esperado)
 
 ### Massa de carga
@@ -39,5 +39,5 @@ No ambiente STG, processos podem permanecer longos periodos em `status=100`.
 Tratamento no projeto:
 
 - timeout controlado de polling (sem loop infinito)
-- classificacao explicita de resultado (`completed`, `failed_terminal`, `not_found`, `timeout`, `error`)
-- registro das evidencias em `reports/*.json`
+- classificação explícita de resultado (`completed`, `failed_terminal`, `not_found`, `timeout`, `error`)
+- registro das evidências em `reports/*.json`

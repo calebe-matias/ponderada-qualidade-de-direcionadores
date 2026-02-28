@@ -6,11 +6,11 @@ Os testes foram escritos cada um com ID rastreável, objetivo, cenário e métri
 
 | ID | Driver | Arquivo | Objetivo |
 | --- | --- | --- | --- |
-| BD1-T01 | Upload assincrono | `tests/integration/driver1-upload-reliability.spec.js` | confirmar upload valido com `processos[0].id` |
-| BD1-T02 | Upload assincrono | `tests/integration/driver1-upload-reliability.spec.js` | confirmar erro `401` sem chave |
-| BD1-T03 | Upload assincrono | `tests/integration/driver1-upload-reliability.spec.js` | burst concorrente e medicao de p95/sucesso |
+| BD1-T01 | Upload assíncrono | `tests/integration/driver1-upload-reliability.spec.js` | confirmar upload valido com `processos[0].id` |
+| BD1-T02 | Upload assíncrono | `tests/integration/driver1-upload-reliability.spec.js` | confirmar erro `401` sem chave |
+| BD1-T03 | Upload assíncrono | `tests/integration/driver1-upload-reliability.spec.js` | burst concorrente e medicao de p95/sucesso |
 | BD2-T01 | Polling | `tests/integration/driver2-polling-reliability.spec.js` | encerrar em estado terminal ou timeout controlado |
-| BD2-T02 | Polling | `tests/unit/polling-status.spec.js` | retry/backoff em erro transitorio |
+| BD2-T02 | Polling | `tests/unit/polling-status.spec.js` | retry/backoff em erro transitório |
 | BD2-T03 | Polling | `tests/unit/polling-status.spec.js` + `tests/integration/driver2-polling-reliability.spec.js` | classificar `404` como `not_found` |
 | BD2-T04 | Polling | `tests/integration/driver2-polling-reliability.spec.js` | validar `401` com chave invalida |
 | BD3-T01 | Carga | `tests/load/driver3-high-load.js` | executar 200 VUs por 5 min e medir p95/erro/throughput |

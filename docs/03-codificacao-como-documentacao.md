@@ -1,13 +1,12 @@
-# Codificacao como Documentacao de Testes [3.0 pontos]
+# Codificação como documentação de testes [3.0 pontos]
 
-## Pergunta da atividade
+## Pergunta 3:
 
-Como a codificacao foi usada como documentacao de testes?
+Codificação como documentação de testes (Como a codificação foi usada como documentação de testes?)
 
-## Resposta direta
+## Resposta:
 
-Cada teste foi escrito com ID rastreavel, objetivo, cenario e metrica.
-Assim, o proprio codigo executavel funciona como documento vivo de verificacao.
+Os testes foram escritos cada um com ID rastreável, objetivo, cenário e métrica; assim, o próprio código funciona como documentação.
 
 ## Mapa de testes por driver
 
@@ -23,24 +22,24 @@ Assim, o proprio codigo executavel funciona como documento vivo de verificacao.
 | BD3-T01 | Carga | `tests/load/driver3-high-load.js` | executar 200 VUs por 5 min e medir p95/erro/throughput |
 | BD3-T02 | Carga | `tests/load/driver3-high-load.js` | verificar estabilidade por janela de 1 minuto |
 
-## Evidencias geradas
+## Evidências geradas
 
-- Unitario/Integracao: `reports/unit-report.html` e `reports/integration-report.html`
+- Unitário/Integração: `reports/unit-report.html` e `reports/integration-report.html`
 - Resumo Driver 1: `reports/driver1-upload-summary.json`
 - Resumo Driver 2: `reports/driver2-polling-summary.json`
 - Carga: `reports/load-metrics.json` e `reports/load-summary.md`
 
-## Resultado da execucao local (2026-02-27)
+## Resultado da execução local (2026-02-27)
 
 - Driver 1 (BD1-T03): sucesso `100%` (20/20), p95 upload `1057ms`
 - Driver 2 (BD2-T01): polling com timeout controlado, status final observado `100`
 - Driver 3 (BD3-T01): 125274 requisicoes, taxa de erro `95.39%`, p95 `372ms`
-- Conclusao objetiva de carga: criterio `erro < 5%` falhou no STG nesta execucao
+- Conclusão objetiva de carga: criterio `erro < 5%` falhou no STG nesta execucao
 
-## Conclusao objetiva
+## Conclusão objetiva
 
-O repositorio entrega codigo testavel que responde diretamente aos 3 blocos da atividade:
+O repositório entrega código testável que responde diretamente aos 3 blocos da atividade:
 
 1. mapa dos drivers
 2. estrategia e massa
-3. codificacao como documentacao de teste
+3. codificação como documentação de teste

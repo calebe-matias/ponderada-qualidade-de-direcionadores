@@ -1,6 +1,6 @@
 # Estrategia e Massa de Testes [4.0 pontos]
 
-## Pergunta 2
+## Pergunta 2:
 
 Estratégia e Massa de Testes (Qual estrategia foi adotada e qual massa de testes foi usada?)
 

@@ -6,11 +6,11 @@ Projeto de aferição de qualidade da API ASIS com 3 drivers de negócio:
 2. Confiabilidade de consulta por polling de status
 3. Performance e estabilidade sob alta carga
 
-## Resposta objetiva ao enunciado
+## Resposta da Ponderada
 
 1. Mapa do Business Drivers [3.0 pontos]: [docs/01-mapa-business-drivers.md](docs/01-mapa-business-drivers.md)
-2. Estrategia e massa de testes [4.0 pontos]: [docs/02-estrategia-massa-testes.md](docs/02-estrategia-massa-testes.md)
-3. Codificação como documentacao de testes [3.0 pontos]: [docs/03-codificacao-como-documentacao.md](docs/03-codificacao-como-documentacao.md)
+2. Estratégia e massa de testes [4.0 pontos]: [docs/02-estrategia-massa-testes.md](docs/02-estrategia-massa-testes.md)
+3. Codificação como documentação de testes [3.0 pontos]: [docs/03-codificacao-como-documentacao.md](docs/03-codificacao-como-documentacao.md)
 
 ## Stack e premissas
 

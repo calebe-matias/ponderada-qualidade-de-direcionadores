@@ -35,5 +35,5 @@ Os testes foram escritos cada um com ID rastreável, objetivo, cenário e métri
 O repositório entrega código testável que responde diretamente aos 3 blocos da atividade:
 
 1. mapa dos drivers
-2. estrategia e massa
+2. estratégia e massa
 3. codificação como documentação de teste
